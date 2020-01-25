@@ -1,21 +1,21 @@
 {
-  "name": "hello",
-  "description": "Proyecto hola mundo",
+  "name": "web-server",
+  "description": "Servidor web hola mundo",
   "keywords": [
     "ltaw",
     "test"
   ],
   "version": "0.0.1",
   "author": "Nieves Canas",
-  "main": "hello.js",
+  "main": "server.js",
   "devDependencies": {},
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/nievescanas/2019-2020-LTAW-Practicas"
   },
   "scripts": {
-    "start": "node hello.js",
+    "start": "node server.js",
     "test": "node -v"
   }
 }
