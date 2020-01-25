@@ -4,6 +4,7 @@ const PUERTO = 8080;
 //-- Modulo http
 const http = require('http');
 var url = require('url');
+
 var fs = require('fs');  // -- Sistema de archivos
 
 console.log("Arrancando servidor...")
@@ -15,17 +16,22 @@ function peticion(req, res) {
 
   //-- Peticion recibida
   console.log("Peticion recibida!")
+  
+  //-- Parte la URL como propiedades
+  var q = url.parse(req.url, true);
 
-  fs.readFile('page_structure.html', function(err, data) {
-    if (err) {
-      console.error(err);
-      res.write("Error");
-      res.end();
-      return
-    }else{
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(data);
-    res.end();
+  //-- returns '/default.htm'
+  var filename = "." + q.pathname;
+
+  //-- Leer fichero
+  fs.readFile(filename, function(err, data) {
+    if (err) {              //-- Control de error de lectura
+      res.writeHead(404, {'Content-Type': 'text/html'});
+      return res.end("404 Not Found");
+    }else{                //-- Contrucción menjase
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write(data);
+      return res.end();
     }
   });
 
