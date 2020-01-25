@@ -12,7 +12,7 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nievescanas/2019-2020-LTAW-Practicas"
+    "url": ""
   },
   "scripts": {
     "start": "node server.js",

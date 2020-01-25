@@ -3,6 +3,7 @@ const PUERTO = 8080;
 
 //-- Modulo http
 const http = require('http');
+var url = require('url');
 
 console.log("Arrancando servidor...")
 
@@ -16,8 +17,9 @@ function peticion(req, res) {
 
   //-- Crear mensaje de respuesta
   res.writeHead(200, {'Content-Type': 'text/html'});
-  res.end('Hello World!');
-
+  var q = url.parse(req.url, true).query;
+  var txt = q.year + " " + q.month;
+  res.end(txt);
 }
 
 //-- Inicializar el servidor
