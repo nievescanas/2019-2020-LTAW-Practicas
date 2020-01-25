@@ -1,0 +1,21 @@
+{
+  "name": "hello",
+  "description": "Proyecto hola mundo",
+  "keywords": [
+    "ltaw",
+    "test"
+  ],
+  "version": "0.0.1",
+  "author": "Nieves Canas",
+  "main": "hello.js",
+  "devDependencies": {},
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "node hello.js",
+    "test": "node -v"
+  }
+}
