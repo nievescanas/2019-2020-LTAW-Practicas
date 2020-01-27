@@ -16,12 +16,16 @@ function peticion(req, res) {
 
   //-- Peticion recibida
   console.log("Peticion recibida!")
-  
+
   //-- Parte la URL como propiedades
   var q = url.parse(req.url, true);
 
-  //-- returns '/default.htm'
+  //-- returns './default.htm'
   var filename = "." + q.pathname;
+  if (filename == "./"){
+    filename = "./page_structure.html"
+  }
+  console.log(filename)
 
   //-- Leer fichero
   fs.readFile(filename, function(err, data) {
