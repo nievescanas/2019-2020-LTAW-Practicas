@@ -1,12 +1,10 @@
+# Create your views.
 from django.shortcuts import render
-
 from django.template import Template, Context
 from django.template.loader import get_template
-# Create your views here.
-# -- Fichero mi_tienda/views.py
 from django.http import HttpResponse
 from random import randint
-
+from mi_tienda.models import Producto
 
 # -- Vista principal de mi tienda
 # -- El nombre de la vista puede ser cualquiera. Nosotros lo hemos
@@ -98,3 +96,15 @@ def test5(request):
     # -- Obtener el número aleatorio
     numero = randint(0, 100)
     return render(request, 'test5.html', {'numero':str(numero)})
+
+def list(request):
+    productos = Producto.objects.all()
+    html = "<h2>Listado de articulos</h2>"
+    for prod in productos:
+        print(prod.nombre)
+        html += '<p>'+ prod.nombre + ' ' + str(prod.precio) + '<p>'
+    return HttpResponse(html)
+
+def list2(request):
+    productos = Producto.objects.all()
+    return render(request, 'listado.html', {'productos':productos})
