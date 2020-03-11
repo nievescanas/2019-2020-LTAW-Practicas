@@ -108,3 +108,13 @@ def list(request):
 def list2(request):
     productos = Producto.objects.all()
     return render(request, 'listado.html', {'productos':productos})
+
+def formulario1(request):
+    return render(request, 'formulario1.html', {})
+
+def recepcion1(request):
+    # -- Obtener el nombre de la persona
+    persona = request.POST['nombre']
+    # -- Imprimirlo en la consola del servidor
+    print(f" PEDIDO RECIBIDO!!! ----> {persona}")
+    return HttpResponse("Datos recibidos!!. Comprador: " + request.POST['nombre'])
