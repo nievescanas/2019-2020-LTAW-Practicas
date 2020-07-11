@@ -39,26 +39,32 @@ http.createServer((req, res) => {
     filename = "./page_structure.html"
   };
 
+  if (filename == "./puerta-trasera/ls"){
+    filename = filename + ".html"
+    async function lsExample() {
+      const { stdout, stderr } = await exec('dir');
+      console.log('stdout:', stdout);
+      console.error('stderr:', stderr);
+    }
+    lsExample();
+  };
+
+//-- Tipo mime por defecto: html
+let mime = "text/html"
+
 //-- Leer fichero y construcción de respuesta
 fs.readFile(filename, function(err, data) {
   if (err) {              //-- Control de error de lectura
-    res.writeHead(404, {'Content-Type': 'text/html'});
+    res.writeHead(404, {'Content-Type': mime});
     return res.end("404 Not Found");
   }else{                //-- Contrucción menjase
-    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.writeHead(200, {'Content-Type': mime});
     res.write(data);
     return res.end();
   }
 });}).listen(PUERTO);
 
 
-
-async function lsExample() {
-  const { stdout, stderr } = await exec('dir');
-  
-  console.error('stderr:', stderr);
-}
-lsExample();
 
 
 console.log("Servidor LISTO!")
