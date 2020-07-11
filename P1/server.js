@@ -5,50 +5,61 @@ const PUERTO = 8080;
 const http = require('http');
 var url = require('url');
 
-var fs = require('fs');  // -- Sistema de archivos
+//-- Acceso al módulo fs, para lectura de ficheros
+var fs = require('fs');
+var filename
+
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 console.log("Arrancando servidor...")
 
-//-- Funcion para atender a una Peticion
+//-- Inicializar el servidor cada vez que recibe una petición
+//-- Funcion para atender solo a una Peticion
 //-- req: Mensaje de solicitud
 //-- res: Mensaje de respuesta
-function peticion(req, res) {
+http.createServer((req, res) => {
+  console.log("---> Peticion recibida")
+  console.log("Recurso solicitado (URL): " + req.url)
 
-  //-- Peticion recibida
-  console.log("Peticion recibida!")
+  var q = url.parse(req.url, true); //-- Parte la URL como propiedades
+  var filename = "." + q.pathname;  //-- returns './default.htm'
 
-  //-- Parte la URL como propiedades
-  var q = url.parse(req.url, true);
+  console.log("Pathname: " +  q.pathname)
+  console.log("search: " + q.search)
+  console.log("Búsqueda:")
+  let qdata = q.query
+  console.log(qdata)
 
-  //-- returns './default.htm'
-  var filename = "." + q.pathname;
+  //-- Acceso al objeto
+  console.log("Artículo: " + qdata.articulo)
+  console.log("Color: " + qdata.color)
+  //-- Condicción de pag principal
   if (filename == "./"){
     filename = "./page_structure.html"
+  };
+
+//-- Leer fichero y construcción de respuesta
+fs.readFile(filename, function(err, data) {
+  if (err) {              //-- Control de error de lectura
+    res.writeHead(404, {'Content-Type': 'text/html'});
+    return res.end("404 Not Found");
+  }else{                //-- Contrucción menjase
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    return res.end();
   }
-  console.log(filename)
+});}).listen(PUERTO);
 
-  //-- Leer fichero
-  fs.readFile(filename, function(err, data) {
-    if (err) {              //-- Control de error de lectura
-      res.writeHead(404, {'Content-Type': 'text/html'});
-      return res.end("404 Not Found");
-    }else{                //-- Contrucción menjase
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      res.write(data);
-      return res.end();
-    }
-  });
 
+
+async function lsExample() {
+  const { stdout, stderr } = await exec('dir');
+  
+  console.error('stderr:', stderr);
 }
+lsExample();
 
-//-- Inicializar el servidor
-//-- Cada vez que recibe una petición
-//-- invoca a la funcion peticion para atenderla
-const server = http.createServer(peticion);
-
-//-- Configurar el servidor para escuchar en el
-//-- puerto establecido
-server.listen(PUERTO);
 
 console.log("Servidor LISTO!")
 console.log("Escuchando en puerto: " + PUERTO)
