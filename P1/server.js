@@ -39,7 +39,8 @@ http.createServer((req, res) => {
 
 
   //-- Pagina principal y Tipo mime por petición
-let mime = "text/"
+  let mime = "text/"
+
   if (filename == "./"){
     filename = "./page_structure.html"
     mime = mime + "html"
@@ -54,8 +55,12 @@ let mime = "text/"
     lsExample();
   }else{
     let point_position = q.pathname.lastIndexOf(".")
-    mime = mime + q.pathname.slice(point_position+1)
-    console.log(mime)
+    if (point_position == -1){
+      mime = mime + "html"
+      filename = filename + "/index.html"
+    }else {
+      mime = mime + q.pathname.slice(point_position+1)
+    }
   };
 
 
