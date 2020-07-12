@@ -40,6 +40,7 @@ http.createServer((req, res) => {
 
   //-- Pagina principal y Tipo mime por petición
   let mime = "text/"
+  let mime_img = "image/"
 
   if (filename == "./"){
     filename = "./page_structure.html"
@@ -55,11 +56,15 @@ http.createServer((req, res) => {
     lsExample();
   }else{
     let point_position = q.pathname.lastIndexOf(".")
+    let tipo = q.pathname.slice(point_position+1)
+
     if (point_position == -1){
       mime = mime + "html"
       filename = filename + "/index.html"
-    }else {
-      mime = mime + q.pathname.slice(point_position+1)
+    }else if (tipo == "PNG") {
+      mime = mime_img + tipo
+    }else{
+      mime = mime + tipo
     }
   };
 
@@ -74,6 +79,7 @@ fs.readFile(filename, function(err, data) {
     res.write(data);
     return res.end();
   }
+  console.log(res);
 });}).listen(PUERTO);
 
 
