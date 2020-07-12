@@ -1,0 +1,41 @@
+html, body{
+   height: 100%;
+   background-color: white;
+ }
+
+ .contenedor1{
+   height: 60%;
+   margin: 1% 1%;
+ }
+
+ .center {
+     margin-left: auto;
+     margin-right: auto;
+     display: block;
+     width: 45%;
+     height: 100%;
+ }
+
+ .contenedor2{
+   height: 40%;
+   background-color: #F4BF82;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: 1% 1%;
+ }
+
+.button_content{
+  border-radius: 20px;
+  margin: 2px 10px;
+  -webkit-box-shadow: -4px 2px 46px 6px rgba(0,0,0,0.75);
+  -moz-box-shadow: -4px 2px 46px 6px rgba(0,0,0,0.75);
+  box-shadow: -4px 2px 46px 6px rgba(0,0,0,0.75);
+}
+
+.img_product{
+  width="200";
+  height="100";
+  border-radius: 20px;
+
+}
