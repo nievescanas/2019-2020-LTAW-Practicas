@@ -9,10 +9,9 @@ var url = require('url');
 var fs = require('fs');
 var filename
 
+//-- Recursos para la ejecución ls
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
-
 
 console.log("Arrancando servidor...")
 
@@ -24,16 +23,16 @@ http.createServer((req, res) => {
   console.log("---> Peticion recibida")
   console.log("Recurso solicitado (URL): " + req.url)
 
-  var q = url.parse(req.url, true); //-- Parte la URL como propiedades
-  var filename = "." + q.pathname;  //-- returns './default.htm'
+  //-- Partes de la url
+  var q = url.parse(req.url, true);
+  var filename = "." + q.pathname;
+  let qdata = q.query
 
+  //-- Información que nos proporciona
   console.log("Pathname: " +  q.pathname)
   console.log("search: " + q.search)
   console.log("Búsqueda:")
-  let qdata = q.query
   console.log(qdata)
-
-  //-- Acceso al objeto
   console.log("Artículo: " + qdata.articulo)
   console.log("Color: " + qdata.color)
 
@@ -81,8 +80,6 @@ fs.readFile(filename, function(err, data) {
   }
   console.log(res);
 });}).listen(PUERTO);
-
-
 
 
 console.log("Servidor LISTO!")
