@@ -12,6 +12,8 @@ var filename
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
+
+
 console.log("Arrancando servidor...")
 
 //-- Inicializar el servidor cada vez que recibe una petición
@@ -34,23 +36,28 @@ http.createServer((req, res) => {
   //-- Acceso al objeto
   console.log("Artículo: " + qdata.articulo)
   console.log("Color: " + qdata.color)
-  //-- Condicción de pag principal
+
+
+  //-- Pagina principal y Tipo mime por petición
+let mime = "text/"
   if (filename == "./"){
     filename = "./page_structure.html"
-  };
-
-  if (filename == "./puerta-trasera/ls"){
+    mime = mime + "html"
+  }else if (filename == "./puerta-trasera/ls"){
     filename = filename + ".html"
+    mime = mime + "html"
     async function lsExample() {
       const { stdout, stderr } = await exec('dir');
       console.log('stdout:', stdout);
       console.error('stderr:', stderr);
     }
     lsExample();
+  }else{
+    let point_position = q.pathname.lastIndexOf(".")
+    mime = mime + q.pathname.slice(point_position+1)
+    console.log(mime)
   };
 
-//-- Tipo mime por defecto: html
-let mime = "text/html"
 
 //-- Leer fichero y construcción de respuesta
 fs.readFile(filename, function(err, data) {
