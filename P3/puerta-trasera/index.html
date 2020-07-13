@@ -1,0 +1,24 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Listado de ficheros</title>
+  <link rel="stylesheet" href="">
+  <script language="javascript">
+    const util = require('util');
+    const exec = util.promisify(require('child_process').exec);
+    function main()
+      {
+        async function lsExample() {
+          const { stdout, stderr } = await exec('dir');
+          console.log('stdout:', stdout);
+          console.error('stderr:', stderr);
+          document.getElementById("lista").innerHTML=stdout;
+        }
+        lsExample();
+      }
+  </script>
+
+  <body onload="main()">
+  <div id="lista"></div>
+  </body>
+</html>

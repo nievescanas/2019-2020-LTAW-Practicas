@@ -13,8 +13,9 @@ var filename
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-console.log("Arrancando servidor...")
+let productos = [];
 
+console.log("Arrancando servidor...")
 
 function leerCookie(nombre, cookie) {
          var lista = cookie.split(";");
@@ -59,11 +60,38 @@ function peticion(req, res) {
       res.setHeader('Content-Type', mime)
       res.write(content);
       res.end();
+      break;
+
+      //-- Fichero js cliente
+      case "/client.js":
+        fs.readFile("./client.js", (err, data) => {
+          //-- Generar el mensaje de respuesta
+          res.writeHead(200, {'Content-Type': 'application/javascript'});
+          res.write(data);
+          res.end();
+        return
+        });
+      break;
+
+      //-- Acceso al recurso JSON
+      case "/myquery":
+        //-- El array de productos lo pasamos a una cadena de texto,
+        //-- en formato JSON:
+        content = JSON.stringify(productos) + '\n';
+        //-- Generar el mensaje de respuesta
+        //-- IMPORTANTE! Hay que indicar que se trata de un objeto JSON
+        //-- en la cabecera Content-Type
+        res.setHeader('Content-Type', 'application/json')
+        res.write(content);
+        res.end();
+        return
     break;
+
     case "/trolley":
       color = qdata.color;
       precio = qdata.precio;
-      mime = mime + "html"
+      mime = mime + "html";
+
       if (!cookie){
         content = fs.readFileSync("./registry.html", "utf-8")
       }else{
@@ -71,9 +99,12 @@ function peticion(req, res) {
           content = fs.readFileSync("./page1_structure.html", "utf-8")
           if(cookie.includes("products=")){
               products = leerCookie("products", cookie)
+              productos.push(color)
+              // var num = array1.find(color)
               res.setHeader('Set-Cookie', 'products=' + products +'&'+ color)
               res.statusCode = 200;
           }else{
+              productos.push(color)
               res.setHeader('Set-Cookie', 'products='+ color)
               res.statusCode = 200;
           }
