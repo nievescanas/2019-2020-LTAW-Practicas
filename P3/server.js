@@ -13,18 +13,18 @@ var filename
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-//-- Precio dependiendo del tipo de vino
-var vino = { blanco: 10, tinto: 20, rosado: 30};
-
 console.log("Arrancando servidor...")
 
 
-function leerCookie(nombre) {
-         var lista = document.cookie.split(";");
+function leerCookie(nombre, cookie) {
+
+         var lista = cookie.split(";");
          for (i in lista) {
              var busca = lista[i].search(nombre);
-             if (busca > -1) {micookie=lista[i]}
+             if (busca > -1) {
+               micookie=lista[i]
              }
+        }
          var igual = micookie.indexOf("=");
          var valor = micookie.substring(igual+1);
          return valor;
@@ -68,10 +68,12 @@ function peticion(req, res) {
       if (cookie.includes("user")){
         content = fs.readFileSync("./page1_structure.html", "utf-8")
         if(cookie.includes("products=")){
-            res.setHeader('Set-Cookie', 'products=lolaaaa') //-- Cookie usuario
+          console.log(leerCookie("products", cookie))
+            products = leerCookie("products", cookie)
+            res.setHeader('Set-Cookie', 'products=' + products +'&'+ color) //-- Cookie usuario
             res.statusCode = 200;
         }else{
-            res.setHeader('Set-Cookie', 'products=lela') //-- Cookie usuario
+            res.setHeader('Set-Cookie', 'products='+ color) //-- Cookie usuario
             res.statusCode = 200;
         }
       }else{
