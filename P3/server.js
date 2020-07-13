@@ -13,7 +13,22 @@ var filename
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
+//-- Precio dependiendo del tipo de vino
+var vino = { blanco: 10, tinto: 20, rosado: 30};
+
 console.log("Arrancando servidor...")
+
+
+function leerCookie(nombre) {
+         var lista = document.cookie.split(";");
+         for (i in lista) {
+             var busca = lista[i].search(nombre);
+             if (busca > -1) {micookie=lista[i]}
+             }
+         var igual = micookie.indexOf("=");
+         var valor = micookie.substring(igual+1);
+         return valor;
+  }
 
 //-- Inicializar el servidor cada vez que recibe una petición
 //-- Funcion para atender solo a una Peticion
@@ -28,6 +43,9 @@ function peticion(req, res) {
   var filename = "." + q.pathname;
   let qdata = q.query;
   const cookie = req.headers.cookie;
+  console.log(qdata)
+  console.log(filename)
+
 
   //-- Pagina principal y Tipo mime por petición
   let mime = "text/"
@@ -43,11 +61,25 @@ function peticion(req, res) {
       res.write(content);
       res.end();
     break;
-    case "./registry.html":
+    case "/trolley":
+      color = qdata.color;
+      precio = qdata.precio;
       mime = mime + "html"
-      res.setHeader('Content-Type', mime)
-      res.write(content);
-      res.end();
+      if (cookie.includes("user")){
+        content = fs.readFileSync("./page1_structure.html", "utf-8")
+        if(cookie.includes("products=")){
+            res.setHeader('Set-Cookie', 'products=lolaaaa') //-- Cookie usuario
+            res.statusCode = 200;
+        }else{
+            res.setHeader('Set-Cookie', 'products=lela') //-- Cookie usuario
+            res.statusCode = 200;
+        }
+      }else{
+        content = fs.readFileSync("./registry.html", "utf-8")
+      }
+        res.setHeader('Content-Type', mime)
+        res.write(content);
+        res.end();
     break;
     //-- Pagina de acceso
     case "/myform":
@@ -56,29 +88,39 @@ function peticion(req, res) {
         var content = `
         <!DOCTYPE html>
         <html lang="es">
-          <head>
-            <meta charset="utf-8">
-            <title>FORM 1</title>
-          </head>
-          <body>
-            <p>Recibido: `
+        <head>
+          <meta charset="utf-8">
+          <title>Registro</title>
+          <link rel="stylesheet" href="css/page_principal.css">
+        </head>
+          <body onload="main()">
+            <div class="contenedor1">
+            <p>Ya estas resgistrad@ : `
         req.on('data', chunk => {
             //-- Leer los datos (convertir el buffer a cadena)
             data = chunk.toString();
+            console.log(data)
+            user = data.slice(data.lastIndexOf('=')+1)
             //-- Añadir los datos a la respuesta
-            content += data;
+            content += user;
             //-- Fin del mensaje. Enlace al formulario
             content += `
                 </p>
-                <a href="/">[Formulario]</a>
+                </div>
+                <div class="contenedor2"><a href="page_structure.html">
+                  <button class = button_content type="button" >
+                    <img src="/images/volver.PNG" class="img_product"  width="100";height="50";>
+                  </button>
+                <a></div>
               </body>
             </html>
             `
             //-- Mostrar los datos en la consola del servidor
             console.log("Datos recibidos: " + data)
-
-            user = data.slice(data.lastIndexOf('=')+1)
-            res.setHeader('Set-Cookie', 'user=' + user)
+            //-- Numero de usuario
+            var num = Math.floor(Math.random() * 50)
+            //-- Ususario
+            res.setHeader('Set-Cookie', 'user'+ num +'=' + user) //-- Cookie usuario
             res.statusCode = 200;
          });
          req.on('end', ()=> {
