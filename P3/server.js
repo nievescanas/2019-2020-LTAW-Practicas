@@ -17,7 +17,6 @@ console.log("Arrancando servidor...")
 
 
 function leerCookie(nombre, cookie) {
-
          var lista = cookie.split(";");
          for (i in lista) {
              var busca = lista[i].search(nombre);
@@ -65,19 +64,20 @@ function peticion(req, res) {
       color = qdata.color;
       precio = qdata.precio;
       mime = mime + "html"
-      if (cookie.includes("user")){
-        content = fs.readFileSync("./page1_structure.html", "utf-8")
-        if(cookie.includes("products=")){
-          console.log(leerCookie("products", cookie))
-            products = leerCookie("products", cookie)
-            res.setHeader('Set-Cookie', 'products=' + products +'&'+ color) //-- Cookie usuario
-            res.statusCode = 200;
-        }else{
-            res.setHeader('Set-Cookie', 'products='+ color) //-- Cookie usuario
-            res.statusCode = 200;
-        }
-      }else{
+      if (!cookie){
         content = fs.readFileSync("./registry.html", "utf-8")
+      }else{
+        if (cookie.includes("user")){
+          content = fs.readFileSync("./page1_structure.html", "utf-8")
+          if(cookie.includes("products=")){
+              products = leerCookie("products", cookie)
+              res.setHeader('Set-Cookie', 'products=' + products +'&'+ color)
+              res.statusCode = 200;
+          }else{
+              res.setHeader('Set-Cookie', 'products='+ color)
+              res.statusCode = 200;
+          }
+        }
       }
         res.setHeader('Content-Type', mime)
         res.write(content);
